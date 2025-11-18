@@ -1,9 +1,10 @@
-package us.fatehi.model_json_schema;
+package us.fatehi.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
+import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 
 public class JsonSchemaTest {
 

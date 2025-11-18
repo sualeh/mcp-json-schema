@@ -2,10 +2,10 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>us.fatehi</groupId>
-  <artifactId>model-json-schema</artifactId>
+  <artifactId>mcp-json-schema</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>MCP JSON Schema</name>
-  <description>Creates a JSON Schema for MCP Servers from a Jackson annotated class</description>
+  <description>Creates a JSON Schema for MCP Servers from a Jackson annotated class.</description>
   
   
   <properties>

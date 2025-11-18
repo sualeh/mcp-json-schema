@@ -26,9 +26,7 @@ public class JsonSchemaGenerator {
 
   public static JsonNode generateSchema(final Class<?> clazz) {
 
-    final SerializationConfig config = mapper.getSerializationConfig();
-    final BeanDescription beanDesc =
-        config.introspect(TypeFactory.defaultInstance().constructType(clazz));
+    final BeanDescription beanDesc = createBeanDescription(clazz);
 
     final ObjectNode schemaNode = mapper.createObjectNode();
 
@@ -64,6 +62,13 @@ public class JsonSchemaGenerator {
     schemaNode.put("additionalProperties", false);
 
     return schemaNode;
+  }
+
+  private static BeanDescription createBeanDescription(final Class<?> clazz) {
+    final SerializationConfig config = mapper.getSerializationConfig();
+    final BeanDescription beanDesc =
+        config.introspect(TypeFactory.defaultInstance().constructType(clazz));
+    return beanDesc;
   }
 
   private static void setEnumValues(final ObjectNode node, final JavaType javaType) {

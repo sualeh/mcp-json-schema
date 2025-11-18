@@ -1,4 +1,4 @@
-package us.fatehi.mcp_json_schema;
+package us.fatehi.model_json_schema;
 
 public class Main {
 

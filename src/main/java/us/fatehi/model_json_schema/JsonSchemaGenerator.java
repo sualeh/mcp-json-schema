@@ -52,6 +52,7 @@ public class JsonSchemaGenerator {
       }
 
       setEnumValues(parameterNode, javaType);
+      setItems(parameterNode, javaType);
 
       if (propertyMetadata.isRequired()) {
         required.add(propertyName);
@@ -85,6 +86,15 @@ public class JsonSchemaGenerator {
       for (final Object e : constants) {
         enumValuesNode.add(((Enum<?>) e).name());
       }
+    }
+  }
+
+  private static void setItems(final ObjectNode node, final JavaType javaType) {
+    if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
+      final ObjectNode itemsNode = node.putObject("items");
+      final JavaType contentType = javaType.getContentType();
+      setType(itemsNode, contentType);
+      setEnumValues(itemsNode, contentType);
     }
   }
 

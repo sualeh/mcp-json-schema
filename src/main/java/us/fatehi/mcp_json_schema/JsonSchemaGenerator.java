@@ -19,7 +19,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonSchemaGenerator {
 
@@ -36,21 +39,28 @@ public class JsonSchemaGenerator {
     schemaNode.put("type", "object");
     final ObjectNode propertiesNode = schemaNode.putObject("properties");
     final List<String> required = new ArrayList<>();
-    final List<BeanPropertyDefinition> properties = beanDesc.findProperties();
-    for (final BeanPropertyDefinition prop : properties) {
-      System.out.println(prop.getGetter().getFullName());
-      final String propertyName = prop.getName();
+    final List<BeanPropertyDefinition> propertyDefinitions = beanDesc.findProperties();
+    for (final BeanPropertyDefinition propertyDefinition : propertyDefinitions) {
+      System.out.println(propertyDefinition.getGetter().getFullName());
+      final String propertyName = propertyDefinition.getName();
       final ObjectNode parameterSchema = propertiesNode.putObject(propertyName);
 
-      final String typeName = mapJavaTypeToJsonType(prop.getPrimaryType().getRawClass());
+      final Class<?> propertyClass = propertyDefinition.getPrimaryType().getRawClass();
+      final String typeName = mapJavaTypeToJsonType(propertyClass);
       parameterSchema.put("type", typeName);
 
-      final AnnotatedMember accessor = prop.getAccessor();
+      final AnnotatedMember accessor = propertyDefinition.getAccessor();
 
       if (accessor.hasAnnotation(JsonPropertyDescription.class)) {
-        final JsonPropertyDescription description =
+        final JsonPropertyDescription propertyDescription =
             accessor.getAnnotation(JsonPropertyDescription.class);
-        parameterSchema.put("description", description.value());
+        parameterSchema.put("description", propertyDescription.value());
+      }
+
+      final List<String> enumValues = getEnumValues(propertyClass);
+      if (!enumValues.isEmpty()) {
+        final ArrayNode enumValuesNode = parameterSchema.putArray("enum");
+        enumValues.forEach(enumValuesNode::add);
       }
 
       if (accessor.hasAnnotation(JsonProperty.class)) {
@@ -64,13 +74,19 @@ public class JsonSchemaGenerator {
     final ArrayNode requiredArray = schemaNode.putArray("required");
     required.forEach(requiredArray::add);
 
+    schemaNode.put("additionalProperties", false);
+
     return schemaNode;
   }
 
-  // Example usage
-  public static void main(final String[] args) throws Exception {
-    final String schemaJson = generateSchema(SampleClass.class).toPrettyString();
-    System.out.println(schemaJson);
+  private static List<String> getEnumValues(final Class<?> type) {
+    if (type.isEnum()) {
+      final Object[] constants = type.getEnumConstants();
+      if (constants != null) {
+        return Arrays.stream(constants).map(e -> ((Enum<?>) e).name()).collect(Collectors.toList());
+      }
+    }
+    return Collections.emptyList();
   }
 
   private static String mapJavaTypeToJsonType(final Class<?> type) {
@@ -86,7 +102,7 @@ public class JsonSchemaGenerator {
     if (type.isArray() || java.util.Collection.class.isAssignableFrom(type)) {
       return "array";
     }
-    if (type.isEnum()) {}
-    return "string"; // fallback
+    // Fallback, even for enums
+    return "string";
   }
 }

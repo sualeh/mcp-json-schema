@@ -115,25 +115,16 @@ public class McpJsonSchemaGenerator {
 
     final String typeName;
     // Integers: short, int, long (primitive and boxed)
-    if (type.equals(short.class)
-        || type.equals(int.class)
-        || type.equals(long.class)
-        || type.equals(Short.class)
-        || type.equals(Integer.class)
-        || type.equals(Long.class)) {
+    if (List.of(short.class, int.class, long.class, Short.class, Integer.class, Long.class)
+        .contains(type)) {
       typeName = "integer";
     } else if (Number.class.isAssignableFrom(type)
-        || (type.isPrimitive()
-            && !type.equals(boolean.class)
-            // cover other numeric primitives like float/double
-            && (type.equals(byte.class)
-                || type.equals(float.class)
-                || type.equals(double.class)))) {
+        || List.of(byte.class, float.class, double.class).contains(type)) {
       // All other numbers remain as "number"
       typeName = "number";
     } else if (type.equals(String.class)) {
       typeName = "string";
-    } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
+    } else if (List.of(Boolean.class, boolean.class).contains(type)) {
       typeName = "boolean";
     } else if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
       typeName = "array";

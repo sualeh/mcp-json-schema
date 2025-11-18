@@ -8,11 +8,13 @@
 package us.fatehi.model_json_schema;
 
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 public class McpJsonSchemaUtility {
 
   public static JsonNode generateJsonSchema(final Class<?> clazz) {
-    return McpJsonSchemaGenerator.generateJsonSchema(clazz);
+    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(new ObjectMapper());
+    return generator.generateJsonSchema(clazz);
   }
 
   private McpJsonSchemaUtility() {

@@ -9,6 +9,7 @@ package us.fatehi.model_json_schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tools.jackson.databind.BeanDescription;
@@ -29,9 +30,15 @@ public class McpJsonSchemaGenerator {
   private static final Logger LOGGER =
       Logger.getLogger(McpJsonSchemaGenerator.class.getCanonicalName());
 
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper;
 
-  public static JsonNode generateJsonSchema(final Class<?> clazz) {
+  public McpJsonSchemaGenerator(final ObjectMapper mapper) {
+    this.mapper = Objects.requireNonNull(mapper, "Object mapper must not be null");
+  }
+
+  public JsonNode generateJsonSchema(final Class<?> clazz) {
+
+    Objects.requireNonNull(clazz, "Class must not be null");
 
     final BeanDescription beanDesc = createBeanDescription(clazz);
 
@@ -72,7 +79,7 @@ public class McpJsonSchemaGenerator {
     return schemaNode;
   }
 
-  private static BeanDescription createBeanDescription(final Class<?> clazz) {
+  private BeanDescription createBeanDescription(final Class<?> clazz) {
 
     final SerializationConfig config = mapper.serializationConfig();
     final ClassIntrospector introspector = new BasicClassIntrospector().forOperation(config);
@@ -84,7 +91,7 @@ public class McpJsonSchemaGenerator {
     return beanDesc;
   }
 
-  private static void setEnumValues(final ObjectNode node, final JavaType javaType) {
+  private void setEnumValues(final ObjectNode node, final JavaType javaType) {
     if (javaType.isEnumType()) {
       final ArrayNode enumValuesNode = node.putArray("enum");
       final Object[] constants = javaType.getRawClass().getEnumConstants();
@@ -94,7 +101,7 @@ public class McpJsonSchemaGenerator {
     }
   }
 
-  private static void setItems(final ObjectNode node, final JavaType javaType) {
+  private void setItems(final ObjectNode node, final JavaType javaType) {
     if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
       final ObjectNode itemsNode = node.putObject("items");
       final JavaType contentType = javaType.getContentType();
@@ -103,7 +110,7 @@ public class McpJsonSchemaGenerator {
     }
   }
 
-  private static void setType(final ObjectNode node, final JavaType javaType) {
+  private void setType(final ObjectNode node, final JavaType javaType) {
     final Class<?> type = javaType.getRawClass();
 
     final String typeName;

@@ -114,7 +114,22 @@ public class McpJsonSchemaGenerator {
     final Class<?> type = javaType.getRawClass();
 
     final String typeName;
-    if (Number.class.isAssignableFrom(type) || type.isPrimitive() && !type.equals(boolean.class)) {
+    // Integers: short, int, long (primitive and boxed)
+    if (type.equals(short.class)
+        || type.equals(int.class)
+        || type.equals(long.class)
+        || type.equals(Short.class)
+        || type.equals(Integer.class)
+        || type.equals(Long.class)) {
+      typeName = "integer";
+    } else if (Number.class.isAssignableFrom(type)
+        || (type.isPrimitive()
+            && !type.equals(boolean.class)
+            // cover other numeric primitives like float/double
+            && (type.equals(byte.class)
+                || type.equals(float.class)
+                || type.equals(double.class)))) {
+      // All other numbers remain as "number"
       typeName = "number";
     } else if (type.equals(String.class)) {
       typeName = "string";

@@ -24,14 +24,14 @@ import tools.jackson.databind.introspect.ClassIntrospector;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
-public class JsonSchemaGenerator {
+public class McpJsonSchemaGenerator {
 
   private static final Logger LOGGER =
-      Logger.getLogger(JsonSchemaGenerator.class.getCanonicalName());
+      Logger.getLogger(McpJsonSchemaGenerator.class.getCanonicalName());
 
   private static final ObjectMapper mapper = new ObjectMapper();
 
-  public static JsonNode generateSchema(final Class<?> clazz) {
+  public static JsonNode generateJsonSchema(final Class<?> clazz) {
 
     final BeanDescription beanDesc = createBeanDescription(clazz);
 

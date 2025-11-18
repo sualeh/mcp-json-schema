@@ -8,10 +8,11 @@
 package us.fatehi.mcp_json_schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyMetadata;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
@@ -19,10 +20,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JsonSchemaGenerator {
 
@@ -66,53 +64,50 @@ public class JsonSchemaGenerator {
     }
   }
 
-  private static List<String> getEnumValues(final Class<?> type) {
-    if (type.isEnum()) {
-      final Object[] constants = type.getEnumConstants();
-      if (constants != null) {
-        return Arrays.stream(constants).map(e -> ((Enum<?>) e).name()).collect(Collectors.toList());
+  private static void setEnumValues(final ObjectNode node, final JavaType javaType) {
+    if (javaType.isEnumType()) {
+      final ArrayNode enumValuesNode = node.putArray("enum");
+      final Object[] constants = javaType.getRawClass().getEnumConstants();
+      for (final Object e : constants) {
+        enumValuesNode.add(((Enum<?>) e).name());
       }
     }
-    return Collections.emptyList();
-  }
-
-  private static String mapJavaTypeToJsonType(final Class<?> type) {
-    if (Number.class.isAssignableFrom(type) || type.isPrimitive() && !type.equals(boolean.class)) {
-      return "number";
-    }
-    if (type.equals(String.class)) {
-      return "string";
-    }
-    if (type.equals(Boolean.class) || type.equals(boolean.class)) {
-      return "boolean";
-    }
-    if (type.isArray() || java.util.Collection.class.isAssignableFrom(type)) {
-      return "array";
-    }
-    // Fallback, even for enums
-    return "string";
   }
 
   private static void setProperty(
       final ObjectNode propertiesNode, final BeanPropertyDefinition propertyDefinition) {
-    final ObjectNode parameterSchema = propertiesNode.putObject(propertyDefinition.getName());
 
-    final Class<?> propertyClass = propertyDefinition.getPrimaryType().getRawClass();
-    final String typeName = mapJavaTypeToJsonType(propertyClass);
-    parameterSchema.put("type", typeName);
+    final JavaType javaType = propertyDefinition.getPrimaryType();
+    final PropertyMetadata propertyMetadata = propertyDefinition.getMetadata();
 
-    final AnnotatedMember accessor = propertyDefinition.getAccessor();
-    if (accessor.hasAnnotation(JsonPropertyDescription.class)) {
-      final JsonPropertyDescription propertyDescription =
-          accessor.getAnnotation(JsonPropertyDescription.class);
-      parameterSchema.put(
-          "description", propertyDescription.value().replaceAll("\\R", " ").strip());
+    final ObjectNode parameterNode = propertiesNode.putObject(propertyDefinition.getName());
+
+    setType(parameterNode, javaType);
+
+    final String description = propertyMetadata.getDescription();
+    if (description != null && !description.strip().isBlank()) {
+      parameterNode.put("description", description.replaceAll("\\R", " ").strip());
     }
 
-    final List<String> enumValues = getEnumValues(propertyClass);
-    if (!enumValues.isEmpty()) {
-      final ArrayNode enumValuesNode = parameterSchema.putArray("enum");
-      enumValues.forEach(enumValuesNode::add);
+    setEnumValues(parameterNode, javaType);
+  }
+
+  private static void setType(final ObjectNode node, final JavaType javaType) {
+    final Class<?> type = javaType.getRawClass();
+
+    final String typeName;
+    if (Number.class.isAssignableFrom(type) || type.isPrimitive() && !type.equals(boolean.class)) {
+      typeName = "number";
+    } else if (type.equals(String.class)) {
+      typeName = "string";
+    } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
+      typeName = "boolean";
+    } else if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
+      typeName = "array";
+    } else {
+      typeName = "string";
     }
+
+    node.put("type", typeName);
   }
 }

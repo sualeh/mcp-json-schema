@@ -7,14 +7,12 @@
 
 package us.fatehi.mcp_json_schema;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyMetadata;
 import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,8 +38,24 @@ public class JsonSchemaGenerator {
     final List<BeanPropertyDefinition> propertyDefinitions = beanDesc.findProperties();
     for (final BeanPropertyDefinition propertyDefinition : propertyDefinitions) {
       System.out.println(propertyDefinition.getGetter().getFullName());
-      setProperty(propertiesNode, propertyDefinition);
-      addRequired(propertyDefinition, required);
+
+      final String propertyName = propertyDefinition.getName();
+      final JavaType javaType = propertyDefinition.getPrimaryType();
+      final PropertyMetadata propertyMetadata = propertyDefinition.getMetadata();
+
+      final ObjectNode parameterNode = propertiesNode.putObject(propertyName);
+      setType(parameterNode, javaType);
+
+      final String description = propertyMetadata.getDescription();
+      if (description != null && !description.strip().isBlank()) {
+        parameterNode.put("description", description.replaceAll("\\R", " ").strip());
+      }
+
+      setEnumValues(parameterNode, javaType);
+
+      if (propertyMetadata.isRequired()) {
+        required.add(propertyName);
+      }
     }
 
     final ArrayNode requiredArray = schemaNode.putArray("required");
@@ -52,18 +66,6 @@ public class JsonSchemaGenerator {
     return schemaNode;
   }
 
-  private static void addRequired(
-      final BeanPropertyDefinition propertyDefinition, final List<String> required) {
-    final AnnotatedMember accessor = propertyDefinition.getAccessor();
-    if (accessor.hasAnnotation(JsonProperty.class)) {
-      final JsonProperty jsonProperty = accessor.getAnnotation(JsonProperty.class);
-      if (jsonProperty.required()) {
-        final String propertyName = propertyDefinition.getName();
-        required.add(propertyName);
-      }
-    }
-  }
-
   private static void setEnumValues(final ObjectNode node, final JavaType javaType) {
     if (javaType.isEnumType()) {
       final ArrayNode enumValuesNode = node.putArray("enum");
@@ -72,24 +74,6 @@ public class JsonSchemaGenerator {
         enumValuesNode.add(((Enum<?>) e).name());
       }
     }
-  }
-
-  private static void setProperty(
-      final ObjectNode propertiesNode, final BeanPropertyDefinition propertyDefinition) {
-
-    final JavaType javaType = propertyDefinition.getPrimaryType();
-    final PropertyMetadata propertyMetadata = propertyDefinition.getMetadata();
-
-    final ObjectNode parameterNode = propertiesNode.putObject(propertyDefinition.getName());
-
-    setType(parameterNode, javaType);
-
-    final String description = propertyMetadata.getDescription();
-    if (description != null && !description.strip().isBlank()) {
-      parameterNode.put("description", description.replaceAll("\\R", " ").strip());
-    }
-
-    setEnumValues(parameterNode, javaType);
   }
 
   private static void setType(final ObjectNode node, final JavaType javaType) {

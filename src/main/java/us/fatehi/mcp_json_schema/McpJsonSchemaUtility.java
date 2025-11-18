@@ -17,6 +17,10 @@ public class McpJsonSchemaUtility {
     return generator.generateJsonSchema(clazz);
   }
 
+  public static String inputSchema(final Class<?> clazz) {
+    return generateJsonSchema(clazz).toString();
+  }
+
   private McpJsonSchemaUtility() {
     // Prevent instantiation
   }

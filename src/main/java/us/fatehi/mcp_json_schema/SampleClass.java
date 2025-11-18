@@ -17,8 +17,7 @@ public record SampleClass(
     @JsonPropertyDescription("Type of database table dependant objects.")
         @JsonProperty(defaultValue = "NONE", required = true)
         DependantObjectType dependantObjectType,
-    @JsonPropertyDescription("Table name.") @JsonProperty(defaultValue = "", required = false)
-        String tableName) {
+    @JsonPropertyDescription("Table name.") String tableName) {
 
   public enum DependantObjectType {
     NONE,

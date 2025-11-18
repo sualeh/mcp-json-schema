@@ -54,7 +54,8 @@ public class JsonSchemaGenerator {
       if (accessor.hasAnnotation(JsonPropertyDescription.class)) {
         final JsonPropertyDescription propertyDescription =
             accessor.getAnnotation(JsonPropertyDescription.class);
-        parameterSchema.put("description", propertyDescription.value());
+        parameterSchema.put(
+            "description", propertyDescription.value().replaceAll("\\R", " ").strip());
       }
 
       final List<String> enumValues = getEnumValues(propertyClass);

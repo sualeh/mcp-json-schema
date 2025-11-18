@@ -114,9 +114,9 @@ public class McpJsonSchemaGenerator {
     final Class<?> type = javaType.getRawClass();
 
     final String typeName;
-    // Integers: short, int, long (primitive and boxed)
     if (List.of(short.class, int.class, long.class, Short.class, Integer.class, Long.class)
         .contains(type)) {
+      // Integers are short, int, long (primitive and boxed)
       typeName = "integer";
     } else if (Number.class.isAssignableFrom(type)
         || List.of(byte.class, float.class, double.class).contains(type)) {

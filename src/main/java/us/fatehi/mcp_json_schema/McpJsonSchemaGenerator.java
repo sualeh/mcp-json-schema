@@ -32,6 +32,7 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.PropertyMetadata;
 import tools.jackson.databind.SerializationConfig;
 import tools.jackson.databind.introspect.AnnotatedClass;
+import tools.jackson.databind.introspect.AnnotatedMember;
 import tools.jackson.databind.introspect.BasicClassIntrospector;
 import tools.jackson.databind.introspect.BeanPropertyDefinition;
 import tools.jackson.databind.introspect.ClassIntrospector;
@@ -107,14 +108,14 @@ public final class McpJsonSchemaGenerator {
 
   private Long[] findNumberRange(final BeanPropertyDefinition propertyDefinition) {
 
-    final Min minAnnotation = propertyDefinition.getAccessor().getAnnotation(Min.class);
-    final Max maxAnnotation = propertyDefinition.getAccessor().getAnnotation(Max.class);
-    final Positive posAnnotation = propertyDefinition.getAccessor().getAnnotation(Positive.class);
-    final PositiveOrZero pos0Annotation =
-        propertyDefinition.getAccessor().getAnnotation(PositiveOrZero.class);
-    final Negative negAnnotation = propertyDefinition.getAccessor().getAnnotation(Negative.class);
-    final NegativeOrZero neg0Annotation =
-        propertyDefinition.getAccessor().getAnnotation(NegativeOrZero.class);
+    final AnnotatedMember accessor = propertyDefinition.getAccessor();
+
+    final Min minAnnotation = accessor.getAnnotation(Min.class);
+    final Max maxAnnotation = accessor.getAnnotation(Max.class);
+    final Positive posAnnotation = accessor.getAnnotation(Positive.class);
+    final PositiveOrZero pos0Annotation = accessor.getAnnotation(PositiveOrZero.class);
+    final Negative negAnnotation = accessor.getAnnotation(Negative.class);
+    final NegativeOrZero neg0Annotation = accessor.getAnnotation(NegativeOrZero.class);
 
     Long min = null;
     if (posAnnotation != null) {
@@ -142,9 +143,10 @@ public final class McpJsonSchemaGenerator {
   }
 
   private Long[] findStringLengthRange(final BeanPropertyDefinition propertyDefinition) {
-    final Size sizeAnnotation = propertyDefinition.getAccessor().getAnnotation(Size.class);
-    final NotBlank notBlankAnnotation =
-        propertyDefinition.getAccessor().getAnnotation(NotBlank.class);
+    final AnnotatedMember accessor = propertyDefinition.getAccessor();
+
+    final Size sizeAnnotation = accessor.getAnnotation(Size.class);
+    final NotBlank notBlankAnnotation = accessor.getAnnotation(NotBlank.class);
 
     Long min = null;
     if (notBlankAnnotation != null) {

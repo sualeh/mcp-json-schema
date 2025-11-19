@@ -7,7 +7,6 @@
 
 package us.fatehi.mcp_json_schema;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -30,12 +29,13 @@ import tools.jackson.databind.ObjectMapper;
  *   <li>At tool registration time, call {@link #inputSchema(Class)} (or {@link
  *       #generateJsonSchema(Class)}) to advertise the tool's <code>input_schema</code> to MCP
  *       clients.
- *   <li>At tool execution time, call {@link #instantiateArguments(String, Class)} to parse the
- *       incoming JSON <em>arguments</em> into your parameters object or record.
+ *   <li>At tool execution time, call {@link DeserializationUtility#instantiateArguments(String,
+ *       Class)} to parse the incoming JSON <em>arguments</em> into your parameters object or
+ *       record.
  * </ul>
  *
- * <p>The generated schema targets the MCP JSON Schema subset (see the <a
- * href="https://modelcontextprotocol.io/specification/2025-06-18/schema#primitiveschemadefinition">MCP
+ * <p>The generated schema targets the MCP JSON Schema subset (see the <a href=
+ * "https://modelcontextprotocol.io/specification/2025-06-18/schema#primitiveschemadefinition">MCP
  * Schema specification</a>). Supported annotations include common Jackson metadata such as
  * {@code @JsonProperty(required = true, defaultValue = "...")}, {@code @JsonPropertyDescription},
  * enums, arrays/ collections, and primitive/ boxed types.
@@ -45,10 +45,9 @@ import tools.jackson.databind.ObjectMapper;
  */
 public class McpJsonSchemaUtility {
 
-  private static final Logger LOGGER =
-      Logger.getLogger(McpJsonSchemaUtility.class.getCanonicalName());
+  static final Logger LOGGER = Logger.getLogger(McpJsonSchemaUtility.class.getCanonicalName());
 
-  private static final ObjectMapper mapper = new ObjectMapper();
+  static final ObjectMapper mapper = new ObjectMapper();
 
   /**
    * Generates an MCP JSON Schema for the supplied parameters class.
@@ -78,38 +77,6 @@ public class McpJsonSchemaUtility {
    */
   public static <P> String inputSchema(final Class<P> clazz) {
     return generateJsonSchema(clazz).toString();
-  }
-
-  /**
-   * Deserializes a JSON arguments string into an instance of the specified parameters class.
-   *
-   * <p>Use this at tool execution time to convert the incoming arguments into your strongly typed
-   * parameters object or record.
-   *
-   * <p>Error handling: If deserialization fails, this method returns {@code null} instead of
-   * throwing. Callers should check for {@code null} and surface an appropriate error back to the
-   * MCP client.
-   *
-   * @param argumentsString the JSON string received for the tool's arguments; must not be null
-   * @param parametersClass the parameters class to instantiate; must not be null
-   * @param <P> the parameters type
-   * @return a populated instance on success; {@code null} on failure
-   */
-  public static <P> P instantiateArguments(
-      final String argumentsString, final Class<P> parametersClass) {
-    try {
-      final P argumentsObject = mapper.readValue(argumentsString, parametersClass);
-      LOGGER.log(Level.FINE, String.valueOf(argumentsObject));
-      return argumentsObject;
-    } catch (final Exception e) {
-      LOGGER.log(
-          Level.INFO,
-          e,
-          () ->
-              "Function parameters could not be instantiated: %s(%s)"
-                  .format(parametersClass.getName(), argumentsString));
-      return null;
-    }
   }
 
   private McpJsonSchemaUtility() {

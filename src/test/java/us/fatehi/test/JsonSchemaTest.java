@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import us.fatehi.mcp_json_schema.DeserializationUtility;
 import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 
 public class JsonSchemaTest {
@@ -36,7 +37,7 @@ public class JsonSchemaTest {
   @Test
   public void testInstantiateArguments_blankString() {
     final SampleParameters params =
-        McpJsonSchemaUtility.instantiateArguments("", SampleParameters.class);
+        DeserializationUtility.instantiateArguments("", SampleParameters.class);
 
     // For blank input, we expect an object instantiated from an empty JSON object.
     // Fields not provided should be null unless defaults are applied by the mapper.
@@ -46,7 +47,7 @@ public class JsonSchemaTest {
   @Test
   public void testInstantiateArguments_malformedJson() {
     final SampleParameters params =
-        McpJsonSchemaUtility.instantiateArguments("{", SampleParameters.class);
+        DeserializationUtility.instantiateArguments("{", SampleParameters.class);
 
     // Malformed JSON should be handled gracefully and return null
     assertNull(params);
@@ -55,7 +56,7 @@ public class JsonSchemaTest {
   @Test
   public void testInstantiateArguments_null() {
     final SampleParameters params =
-        McpJsonSchemaUtility.instantiateArguments(null, SampleParameters.class);
+        DeserializationUtility.instantiateArguments(null, SampleParameters.class);
 
     // For blank input, we expect an object instantiated from an empty JSON object.
     // Fields not provided should be null unless defaults are applied by the mapper.
@@ -73,7 +74,7 @@ public class JsonSchemaTest {
         """;
 
     final SampleParameters params =
-        McpJsonSchemaUtility.instantiateArguments(args, SampleParameters.class);
+        DeserializationUtility.instantiateArguments(args, SampleParameters.class);
 
     assertNotNull(params);
     assertEquals(SampleParameters.DependantObjectType.COLUMNS, params.dependantObjectType());

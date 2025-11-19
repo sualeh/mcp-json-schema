@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import us.fatehi.mcp_json_schema.DeserializationUtility;
 import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 
 public class AllTypesParametersTest {
@@ -46,7 +47,7 @@ public class AllTypesParametersTest {
         """;
 
     final AllTypesParameters params =
-        McpJsonSchemaUtility.instantiateArguments(args, AllTypesParameters.class);
+        DeserializationUtility.instantiateArguments(args, AllTypesParameters.class);
 
     assertNotNull(params);
     assertEquals(42, params.integerValue());

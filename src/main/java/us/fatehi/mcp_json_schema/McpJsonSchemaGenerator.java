@@ -25,7 +25,7 @@ import tools.jackson.databind.introspect.ClassIntrospector;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
-public class McpJsonSchemaGenerator {
+public final class McpJsonSchemaGenerator {
 
   private static final Logger LOGGER =
       Logger.getLogger(McpJsonSchemaGenerator.class.getCanonicalName());

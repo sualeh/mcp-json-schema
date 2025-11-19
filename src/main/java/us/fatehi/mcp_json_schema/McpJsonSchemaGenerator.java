@@ -7,6 +7,14 @@
 
 package us.fatehi.mcp_json_schema;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Negative;
+import jakarta.validation.constraints.NegativeOrZero;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,6 +78,7 @@ public final class McpJsonSchemaGenerator {
 
       setEnumValues(parameterNode, javaType);
       setItems(parameterNode, javaType);
+      setMinMaxValues(parameterNode, propertyDefinition);
 
       if (propertyMetadata.isRequired()) {
         required.add(propertyName);
@@ -94,6 +103,62 @@ public final class McpJsonSchemaGenerator {
     final BeanDescription beanDesc = introspector.introspectForSerialization(type, classDef);
 
     return beanDesc;
+  }
+
+  private Long[] findNumberRange(final BeanPropertyDefinition propertyDefinition) {
+
+    final Min minAnnotation = propertyDefinition.getAccessor().getAnnotation(Min.class);
+    final Max maxAnnotation = propertyDefinition.getAccessor().getAnnotation(Max.class);
+    final Positive posAnnotation = propertyDefinition.getAccessor().getAnnotation(Positive.class);
+    final PositiveOrZero pos0Annotation =
+        propertyDefinition.getAccessor().getAnnotation(PositiveOrZero.class);
+    final Negative negAnnotation = propertyDefinition.getAccessor().getAnnotation(Negative.class);
+    final NegativeOrZero neg0Annotation =
+        propertyDefinition.getAccessor().getAnnotation(NegativeOrZero.class);
+
+    Long min = null;
+    if (posAnnotation != null) {
+      min = 1L;
+    }
+    if (pos0Annotation != null) {
+      min = 0L;
+    }
+    if (minAnnotation != null) {
+      min = minAnnotation.value();
+    }
+
+    Long max = null;
+    if (maxAnnotation != null) {
+      max = maxAnnotation.value();
+    }
+    if (neg0Annotation != null) {
+      max = 0L;
+    }
+    if (negAnnotation != null) {
+      max = -1L;
+    }
+
+    return new Long[] {min, max};
+  }
+
+  private Long[] findStringLengthRange(final BeanPropertyDefinition propertyDefinition) {
+    final Size sizeAnnotation = propertyDefinition.getAccessor().getAnnotation(Size.class);
+    final NotBlank notBlankAnnotation =
+        propertyDefinition.getAccessor().getAnnotation(NotBlank.class);
+
+    Long min = null;
+    if (notBlankAnnotation != null) {
+      min = 1L;
+    }
+    if (sizeAnnotation != null) {
+      min = (long) sizeAnnotation.min();
+    }
+    Long max = null;
+    if (sizeAnnotation != null) {
+      max = (long) sizeAnnotation.max();
+    }
+
+    return new Long[] {min, max};
   }
 
   private void setEnumValues(final ObjectNode node, final JavaType javaType) {
@@ -134,6 +199,32 @@ public final class McpJsonSchemaGenerator {
       setType(itemsNode, contentType);
       setFormat(itemsNode, contentType);
       setEnumValues(itemsNode, contentType);
+    }
+  }
+
+  private void setMinMaxValues(
+      final ObjectNode node, final BeanPropertyDefinition propertyDefinition) {
+    if (String.class.equals(propertyDefinition.getRawPrimaryType())) {
+      final Long[] stringLengthRange = findStringLengthRange(propertyDefinition);
+      final Long minLength = stringLengthRange[0];
+      if (minLength != null) {
+        node.put("minLength", String.valueOf(minLength));
+      }
+      final Long maxLength = stringLengthRange[1];
+      if (maxLength != null) {
+        node.put("maxLength", String.valueOf(maxLength));
+      }
+      return;
+    }
+
+    final Long[] numberRange = findNumberRange(propertyDefinition);
+    final Long minimum = numberRange[0];
+    if (minimum != null) {
+      node.put("minimum", String.valueOf(minimum));
+    }
+    final Long maximum = numberRange[1];
+    if (maximum != null) {
+      node.put("maximum", String.valueOf(maximum));
     }
   }
 

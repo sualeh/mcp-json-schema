@@ -7,6 +7,11 @@
 
 package us.fatehi.mcp_json_schema;
 
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -101,11 +106,33 @@ public final class McpJsonSchemaGenerator {
     }
   }
 
+  private void setFormat(final ObjectNode node, final JavaType javaType) {
+    final Class<?> type = javaType.getRawClass();
+    try {
+      if (URI.class.equals(type)) {
+        node.put("format", "uri");
+        return;
+      }
+
+      if (LocalDate.class.equals(type)) {
+        node.put("format", "date");
+        return;
+      }
+
+      if (List.of(LocalDateTime.class, OffsetDateTime.class, ZonedDateTime.class).contains(type)) {
+        node.put("format", "date-time");
+      }
+    } catch (final Exception e) {
+      LOGGER.log(Level.FINE, e.getMessage(), e);
+    }
+  }
+
   private void setItems(final ObjectNode node, final JavaType javaType) {
     if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
       final ObjectNode itemsNode = node.putObject("items");
       final JavaType contentType = javaType.getContentType();
       setType(itemsNode, contentType);
+      setFormat(itemsNode, contentType);
       setEnumValues(itemsNode, contentType);
     }
   }
@@ -133,5 +160,8 @@ public final class McpJsonSchemaGenerator {
     }
 
     node.put("type", typeName);
+    if (Objects.equals(typeName, "string")) {
+      setFormat(node, javaType);
+    }
   }
 }

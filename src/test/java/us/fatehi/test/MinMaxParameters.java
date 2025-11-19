@@ -7,9 +7,13 @@
 
 package us.fatehi.test;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Negative;
+import jakarta.validation.constraints.NegativeOrZero;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
-// No annotations by requirement
 public record MinMaxParameters(
     @Min(2) int minIntegerValue,
     @Min(2) double minNumberValue,

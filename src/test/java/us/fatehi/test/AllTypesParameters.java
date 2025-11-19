@@ -7,7 +7,6 @@
 
 package us.fatehi.test;
 
-// No annotations by requirement
 public record AllTypesParameters(
     int integerValue,
     double numberValue,

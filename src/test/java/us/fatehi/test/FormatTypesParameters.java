@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
-// No annotations by requirement
 public record FormatTypesParameters(
     URI uriValue,
     LocalDate dateValue,

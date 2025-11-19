@@ -155,9 +155,15 @@ public final class McpJsonSchemaGenerator {
     if (sizeAnnotation != null) {
       min = (long) sizeAnnotation.min();
     }
+    if (min != null && min == 0L) {
+      min = null;
+    }
     Long max = null;
     if (sizeAnnotation != null) {
       max = (long) sizeAnnotation.max();
+    }
+    if (max != null && max == Integer.MAX_VALUE) {
+      max = null;
     }
 
     return new Long[] {min, max};

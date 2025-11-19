@@ -7,18 +7,42 @@
 
 package us.fatehi.mcp_json_schema;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 public class McpJsonSchemaUtility {
 
-  public static JsonNode generateJsonSchema(final Class<?> clazz) {
-    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(new ObjectMapper());
+  private static final Logger LOGGER =
+      Logger.getLogger(McpJsonSchemaUtility.class.getCanonicalName());
+
+  private static final ObjectMapper mapper = new ObjectMapper();
+
+  public static <P> JsonNode generateJsonSchema(final Class<P> clazz) {
+    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(mapper);
     return generator.generateJsonSchema(clazz);
   }
 
-  public static String inputSchema(final Class<?> clazz) {
+  public static <P> String inputSchema(final Class<P> clazz) {
     return generateJsonSchema(clazz).toString();
+  }
+
+  public static <P> P instantiateArguments(
+      final String argumentsString, final Class<P> parametersClass) {
+    try {
+      final P argumentsObject = mapper.readValue(argumentsString, parametersClass);
+      LOGGER.log(Level.FINE, String.valueOf(argumentsObject));
+      return argumentsObject;
+    } catch (final Exception e) {
+      LOGGER.log(
+          Level.INFO,
+          e,
+          () ->
+              "Function parameters could not be instantiated: %s(%s)"
+                  .format(parametersClass.getName(), argumentsString));
+      return null;
+    }
   }
 
   private McpJsonSchemaUtility() {

@@ -65,10 +65,12 @@ public class JsonSchemaTest {
   @Test
   public void testInstantiateArguments_validJson() {
     final String args =
-        "{\n"
-            + "  \"dependant-object-type\": \"COLUMNS\",\n"
-            + "  \"table-name\": \"my_table\"\n"
-            + "}";
+        """
+        {
+          "dependant-object-type": "COLUMNS",
+          "table-name": "my_table"
+        }
+        """;
 
     final SampleParameters params =
         McpJsonSchemaUtility.instantiateArguments(args, SampleParameters.class);

@@ -1,0 +1,16 @@
+{
+  "type" : "object",
+  "properties" : {
+    "dependant-object-type" : {
+      "type" : "string",
+      "description" : "Type of database table dependant objects.",
+      "enum" : [ "NONE", "COLUMNS", "INDEXES", "FOREIGN_KEYS", "TRIGGERS" ]
+    },
+    "table-name" : {
+      "type" : "string",
+      "description" : "Table name."
+    }
+  },
+  "required" : [ "dependant-object-type" ],
+  "additionalProperties" : false
+}

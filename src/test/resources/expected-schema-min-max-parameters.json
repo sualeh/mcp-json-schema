@@ -1,0 +1,19 @@
+{
+  "type" : "object",
+  "properties" : {
+    "minIntegerValue" : { "type" : "integer", "minimum" : "2" },
+    "minNumberValue" : { "type" : "number",  "minimum" : "2" },
+    "maxIntegerValue" : { "type" : "integer", "maximum" : "3" },
+    "maxNumberValue" : { "type" : "number",  "minimum" : "3" },
+    "posIntegerValue" : { "type" : "integer", "minimum" : "1" },
+    "posNumberValue" : { "type" : "number",  "minimum" : "1" },
+    "pos0IntegerValue" : { "type" : "integer", "minimum" : "0" },
+    "pos0NumberValue" : { "type" : "number",  "minimum" : "0" },
+    "negIntegerValue" : { "type" : "integer", "maximum" : "-1" },
+    "negNumberValue" : { "type" : "number",  "maximum" : "-1" },
+    "neg0IntegerValue" : { "type" : "integer", "maximum" : "0" },
+    "neg0NumberValue" : { "type" : "number",  "maximum" : "0" }
+  },
+  "required" : [ ],
+  "additionalProperties" : false
+}

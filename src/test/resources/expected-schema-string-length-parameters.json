@@ -1,0 +1,11 @@
+{
+  "type" : "object",
+  "properties" : {
+    "minValue" : { "type" : "string", "minLength" : "2" },
+    "maxValue" : { "type" : "string", "maxLength" : "3" },
+    "lenValue" : { "type" : "string", "minLength" : "2", "maxLength" : "3" },
+    "notBlankValue" : { "type" : "string", "minLength" : "1" }
+  },
+  "required" : [ ],
+  "additionalProperties" : false
+}

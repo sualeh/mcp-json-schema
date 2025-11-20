@@ -1,0 +1,47 @@
+{
+  "type" : "object",
+  "properties" : {
+    "uriValue" : {
+      "type" : "string",
+      "format" : "uri"
+    },
+    "dateValue" : {
+      "type" : "string",
+      "format" : "date"
+    },
+    "offsetDateTimeValue" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "utilDateValue" : {
+      "type" : "string"
+    },
+    "localDateTimeValue" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "uriArray" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "format" : "uri"
+      }
+    },
+    "dateArray" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "format" : "date"
+      }
+    },
+    "dateTimeArray" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "format" : "date-time"
+      }
+    }
+  },
+  "required" : [ ],
+  "additionalProperties" : false
+}

@@ -49,7 +49,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          clean install
+          clean verify
 
 # CREATE GITHUB RELEASE
     - id: create-release

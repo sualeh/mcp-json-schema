@@ -4,6 +4,8 @@ Generates JSON Schema for MCP servers from a Jackson 3 annotated Java class.
 
 This library targets the Model Context Protocol (MCP) JSON Schema, which is a subset of the general JSON Schema specification. For details on the MCP JSON Schema subset and primitive types, see the MCP [PrimitiveSchemaDefinition](https://modelcontextprotocol.io/specification/2025-06-18/schema#primitiveschemadefinition).
 
+> See [Generate MCP Tool Schemas Directly From Java Code](https://dev.to/sualeh/generate-mcp-tool-schemas-directly-from-java-code-3bif)
+
 ## Usage
 
 ### Define Your MCP Tool Parameters Type
@@ -31,9 +33,9 @@ public record SampleParameters(
 }
 ```
 
-### Generate the MCP `input_schema` for Tool Registration
+### Generate the MCP `inputSchema` for Tool Registration
 
-When registering your MCP tool, use `McpJsonSchemaUtility.inputSchema(...)` to generate the `input_schema` JSON for the parameters type.
+When registering your MCP tool, use `McpJsonSchemaUtility.inputSchema(...)` to generate the `inputSchema` JSON for the parameters type.
 
 ```java
 import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;

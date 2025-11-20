@@ -1,4 +1,8 @@
+**:star: Star it :arrow_heading_up: if you love it!**
+
 # MCP JSON Schema
+
+[![Quick Build](https://github.com/sualeh/mcp-json-schema/actions/workflows/quick_build.yml/badge.svg)](https://github.com/sualeh/mcp-json-schema/actions/workflows/quick_build.yml)
 
 Generates JSON Schema for MCP servers from a Jackson 3 annotated Java class.
 
@@ -7,6 +11,11 @@ This library targets the Model Context Protocol (MCP) JSON Schema, which is a su
 > See [Generate MCP Tool Schemas Directly From Java Code](https://dev.to/sualeh/generate-mcp-tool-schemas-directly-from-java-code-3bif)
 
 ## Usage
+
+### Add a Dependency
+
+Add a dependency to [mcp-json-schema](https://central.sonatype.com/artifact/us.fatehi/mcp-json-schema) in Maven or Gradle.
+
 
 ### Define Your MCP Tool Parameters Type
 

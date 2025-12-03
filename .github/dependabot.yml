@@ -12,3 +12,7 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "monthly"

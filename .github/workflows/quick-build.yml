@@ -24,11 +24,12 @@ jobs:
       name: Prepare Maven build
       uses: sualeh/prepare-maven-build@v1.6.1
       with:
-        java-version: 21
+        java-version: 17
 
 # BUILD AND TEST
     - id: build-test
       name: Build all modules and run tests
+      shell: bash
       run: |
         # Build
         mvn \

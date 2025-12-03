@@ -1,8 +1,10 @@
 **:star: Star it :arrow_heading_up: if you love it!**
 
-# MCP JSON Schema
-
 [![Quick Build](https://github.com/sualeh/mcp-json-schema/actions/workflows/quick_build.yml/badge.svg)](https://github.com/sualeh/mcp-json-schema/actions/workflows/quick_build.yml)
+[![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/mcp-json-schema.svg)](https://search.maven.org/search?q=g:us.fatehi%20mcp-json-schema*)
+
+
+# MCP JSON Schema
 
 Generates JSON Schema for MCP servers from a Jackson 3 annotated Java class.
 

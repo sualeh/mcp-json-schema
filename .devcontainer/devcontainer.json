@@ -1,0 +1,21 @@
+{
+  "name": "mcp-json-schema",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "true"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+      },
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "editorconfig.editorconfig"
+      ]
+    }
+  },
+  "postCreateCommand": "mvn dependency:resolve"
+}

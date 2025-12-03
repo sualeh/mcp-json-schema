@@ -6,4 +6,4 @@ If you would like to make a contribution, please sign the Contributor Agreement 
 
 Thank you.
 
-**Sualeh Fatehi** <sualeh@hotmail.com>
+[Sualeh Fatehi](https://sualeh.github.io/)

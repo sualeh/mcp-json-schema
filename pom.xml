@@ -288,7 +288,7 @@
               <additionalOptions>
                 <additionalOption>-Xdoclint:none</additionalOption>
               </additionalOptions>
-              <bottom>Copyright © 2025 Sualeh Fatehi. All
+              <bottom>Copyright © 2025-2026 Sualeh Fatehi. All
                 rights reserved.</bottom>
               <doctitle>MCP JSON Schema ${project.version}</doctitle>
             </configuration>

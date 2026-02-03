@@ -24,7 +24,7 @@ Add a dependency to us.fatehi:mcp-json-schema in Maven or Gradle.
 <dependency>
     <groupId>us.fatehi</groupId>
     <artifactId>mcp-json-schema</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 

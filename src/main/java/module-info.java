@@ -11,7 +11,7 @@
  * <p>This module provides utilities for generating JSON schemas for the Model Context Protocol
  * (MCP) and for deserializing arguments.
  */
-module us.fatehi.mcp.json.schema {
+module us.fatehi.mcp_json_schema {
   // Jackson dependencies for JSON processing
   requires tools.jackson.databind;
   requires tools.jackson.core;

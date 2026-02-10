@@ -35,9 +35,17 @@ public class DeserializationUtility {
    */
   public static <P> P instantiateArguments(
       final String argumentsString, final Class<P> parametersClass) {
+    if (parametersClass == null) {
+      LOGGER.log(Level.FINER, "No parameters class provided");
+      return null;
+    }
+    if (argumentsString == null || argumentsString.isBlank()) {
+      LOGGER.log(Level.FINER, "No arguments provided");
+      return null;
+    }
     try {
       final P argumentsObject = mapper.readValue(argumentsString, parametersClass);
-      LOGGER.log(Level.FINER, String.valueOf(argumentsObject));
+      LOGGER.log(Level.FINER, () -> String.valueOf(argumentsObject));
       return argumentsObject;
     } catch (final Exception e) {
       LOGGER.log(Level.FINE, e, () -> String.format(parametersClass.getName(), argumentsString));

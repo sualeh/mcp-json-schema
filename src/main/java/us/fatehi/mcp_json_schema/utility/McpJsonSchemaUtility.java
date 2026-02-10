@@ -5,11 +5,12 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package us.fatehi.mcp_json_schema;
+package us.fatehi.mcp_json_schema.utility;
 
 import java.util.logging.Logger;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import us.fatehi.mcp_json_schema.McpJsonSchemaGenerator;
 
 /**
  * Convenience utilities for working with the Model Context Protocol (MCP) JSON Schema.
@@ -47,8 +48,6 @@ public class McpJsonSchemaUtility {
 
   static final Logger LOGGER = Logger.getLogger(McpJsonSchemaUtility.class.getCanonicalName());
 
-  static final ObjectMapper mapper = new ObjectMapper();
-
   /**
    * Generates an MCP JSON Schema for the supplied parameters class.
    *
@@ -61,7 +60,7 @@ public class McpJsonSchemaUtility {
    * @throws NullPointerException if {@code clazz} is null
    */
   public static <P> JsonNode generateJsonSchema(final Class<P> clazz) {
-    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(mapper);
+    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(JsonUtility.mapper);
     return generator.generateJsonSchema(clazz);
   }
 

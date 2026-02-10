@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package us.fatehi.mcp_json_schema;
+package us.fatehi.mcp_json_schema.generator;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

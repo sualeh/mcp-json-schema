@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import us.fatehi.mcp_json_schema.DeserializationUtility;
+import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
 
 public class DeserializationUtilityTest {
 

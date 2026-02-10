@@ -5,28 +5,18 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package us.fatehi.mcp_json_schema;
+package us.fatehi.mcp_json_schema.utility;
 
-import static java.util.Objects.requireNonNull;
-import static tools.jackson.core.StreamReadFeature.IGNORE_UNDEFINED;
-import static tools.jackson.core.StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION;
-import static tools.jackson.core.StreamWriteFeature.IGNORE_UNKNOWN;
-import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
-import static tools.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
-import static tools.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
+import static us.fatehi.mcp_json_schema.utility.JsonUtility.mapper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
 
 public class DeserializationUtility {
 
   private static final Logger LOGGER =
       Logger.getLogger(DeserializationUtility.class.getCanonicalName());
-
-  private static final ObjectMapper mapper = newMapper();
 
   /**
    * Deserializes a JSON arguments string into an instance of the specified parameters class.
@@ -45,9 +35,17 @@ public class DeserializationUtility {
    */
   public static <P> P instantiateArguments(
       final String argumentsString, final Class<P> parametersClass) {
+    if (parametersClass == null) {
+      LOGGER.log(Level.FINER, "No parameters class provided");
+      return null;
+    }
+    if (argumentsString == null || argumentsString.isBlank()) {
+      LOGGER.log(Level.FINER, "No arguments provided");
+      return null;
+    }
     try {
       final P argumentsObject = mapper.readValue(argumentsString, parametersClass);
-      LOGGER.log(Level.FINER, String.valueOf(argumentsObject));
+      LOGGER.log(Level.FINER, () -> String.valueOf(argumentsObject));
       return argumentsObject;
     } catch (final Exception e) {
       LOGGER.log(Level.FINE, e, () -> String.format(parametersClass.getName(), argumentsString));
@@ -88,15 +86,6 @@ public class DeserializationUtility {
                   + argumentsString);
       return mapper.createObjectNode();
     }
-  }
-
-  private static final ObjectMapper newMapper() {
-    final JsonMapper.Builder mapperBuilder = JsonMapper.builder();
-    requireNonNull(mapperBuilder, "No mapper builder provided");
-    mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
-    mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
-    mapperBuilder.enable(IGNORE_UNKNOWN);
-    return mapperBuilder.build();
   }
 
   private DeserializationUtility() {

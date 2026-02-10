@@ -7,10 +7,12 @@
 
 package us.fatehi.mcp_json_schema.utility;
 
+import static us.fatehi.mcp_json_schema.utility.JsonUtility.mapper;
+
 import java.util.logging.Logger;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import us.fatehi.mcp_json_schema.McpJsonSchemaGenerator;
+import us.fatehi.mcp_json_schema.generator.McpJsonSchemaGenerator;
 
 /**
  * Convenience utilities for working with the Model Context Protocol (MCP) JSON Schema.
@@ -60,7 +62,7 @@ public class McpJsonSchemaUtility {
    * @throws NullPointerException if {@code clazz} is null
    */
   public static <P> JsonNode generateJsonSchema(final Class<P> clazz) {
-    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(JsonUtility.mapper);
+    final McpJsonSchemaGenerator generator = new McpJsonSchemaGenerator(mapper);
     return generator.generateJsonSchema(clazz);
   }
 

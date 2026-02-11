@@ -74,7 +74,7 @@ public final class McpJsonSchemaGenerator {
 
       final String description = propertyMetadata.getDescription();
       if (description != null && !description.strip().isBlank()) {
-        parameterNode.put("description", description.replaceAll("\\R", " ").strip());
+        parameterNode.put("description", description);
       }
 
       setEnumValues(parameterNode, javaType);
